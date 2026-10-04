@@ -7,6 +7,10 @@ pipeline {
         jdk 'jdk-11'
         maven 'maven-3-5-4'
     }
+    environment {
+        dockerUsername = credentials("docker-username")
+        dockerPass = credentials("docker-passwd")
+    }
     stages {
         stage("Build Java App") {
             steps {
@@ -18,9 +22,14 @@ pipeline {
                 sh "mvn test"
             }
         }
-        stage("Build Docker Image") {
+        stage("Login into DockerHub") {
             steps {
-                sh "docker build -t javaapp:ver1 ."
+                sh "docker login -u ${dockerUsername} -p ${dockerPass}"
+            }
+        }
+        stage("Push Docker Image") {
+            steps {
+                sh "docker push dinahamza/depi-java:v${BUILD_NUMBER}"
             }
         }
         
