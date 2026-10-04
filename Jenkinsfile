@@ -27,11 +27,6 @@ pipeline {
                 sh "docker login -u ${dockerUsername} -p ${dockerPass}"
             }
         }
-        stage("Build Docker Image") {
-            steps {
-                sh "docker build -t dinahamza/depi-java:v15 ."
-            }
-        }
         stage("Push Docker Image") {
             steps {
                 sh "docker push dinahamza/depi-java:v${BUILD_NUMBER}"
