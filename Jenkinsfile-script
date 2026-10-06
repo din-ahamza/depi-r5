@@ -1,0 +1,26 @@
+node("agent-01") {
+    def maven = tool name: 'maven-3-5-4', type: 'maven'
+    def jdk = tool name: 'jdk-11', type: 'jdk'
+
+    stage("Checkout SCM") {
+        git branch: 'main', credentialsId: 'jenkins-sa', url: 'https://github.com/din-ahamza/depi-r5.git'
+    }
+    stage("Build java app") {
+        env.PATH = "${maven}/bin:${jdk}/bin:${env.PATH}"
+        sh "java --version"
+        sh "mvn --version" 
+        sh "mvn package install -DskipTests=true"
+    }
+    stage("Test java app") {
+        sh "mvn test"
+    }
+    stage("Build Docker Image") {
+        sh "docker build -t dinahamza/depi-java:v${BUILD_NUMBER} ."
+    }
+    stage("Login into DockerHub") {
+        withCredentials([string(credentialsId: 'docker-username', variable: 'dockerUsername'), string(credentialsId: 'docker-passwd', variable: 'dockerPass')]) {
+            sh "docker login -u ${dockerUsername} -p ${dockerPass}"
+        }
+    }
+    
+}

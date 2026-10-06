@@ -22,6 +22,11 @@ pipeline {
                 sh "mvn test"
             }
         }
+        stage("Build Docker Image") {
+            steps {
+                sh "docker build -t dinahamza/depi-java:v${BUILD_NUMBER} ."
+            }
+        }
         stage("Login into DockerHub") {
             steps {
                 sh "docker login -u ${dockerUsername} -p ${dockerPass}"
