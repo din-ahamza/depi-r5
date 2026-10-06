@@ -3,7 +3,7 @@ node("agent-01") {
     def jdk = tool name: 'jdk-11', type: 'jdk'
 
     stage("Checkout SCM") {
-    sh "git clone -b main https://github.com/din-ahamza/depi-r5.git ."
+        git branch: 'main', url: 'https://github.com/din-ahamza/depi-r5.git'
     }
     stage("Build java app") {
         env.JAVA_HOME = "${jdk}"
