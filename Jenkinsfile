@@ -27,11 +27,11 @@ pipeline {
                 sh "docker build -t dinahamza/depi-java:v${BUILD_NUMBER} ."
             }
         }
-        stage("Login into DockerHub") {
-            steps {
-                sh "docker login -u ${dockerUsername} -p ${dockerPass}"
-            }
-        }
+        // stage("Login into DockerHub") {
+        //     steps {
+        //         sh "docker login -u ${dockerUsername} -p ${dockerPass}"
+        //     }
+        // }
         // stage("Push Docker Image") {
         //     steps {
         //         sh "docker push dinahamza/depi-java:v${BUILD_NUMBER}"
