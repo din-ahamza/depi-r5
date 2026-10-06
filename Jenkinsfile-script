@@ -6,6 +6,7 @@ node("agent-01") {
         git branch: 'main', url: 'https://github.com/din-ahamza/depi-r5.git'
     }
     stage("Build java app") {
+        env.JAVA_HOME = "${jdk}"
         env.PATH = "${maven}/bin:${jdk}/bin:${env.PATH}"
         sh "java --version"
         sh "mvn --version" 
