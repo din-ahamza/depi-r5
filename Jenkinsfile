@@ -32,11 +32,11 @@ pipeline {
                 sh "docker login -u ${dockerUsername} -p ${dockerPass}"
             }
         }
-        stage("Push Docker Image") {
-            steps {
-                sh "docker push dinahamza/depi-java:v${BUILD_NUMBER}"
-            }
-        }
+        // stage("Push Docker Image") {
+        //     steps {
+        //         sh "docker push dinahamza/depi-java:v${BUILD_NUMBER}"
+        //     }
+        // }
         
     }
 }
