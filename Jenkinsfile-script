@@ -23,5 +23,13 @@ node("agent-01") {
             sh "docker login -u ${dockerUsername} -p ${dockerPass}"
         }
     }
-    
+    stage("Deploy Java App") {
+        def IMAGE_FOUNDED = sh returnStdout: true, script: 'docker ps -a | grep java-app || true'
+
+        if (IMAGE_FOUNDED){
+            sh "docker rm -f java-app && docker run -d -p 8090:8090 --name java-app dinahamza/depi-java:latest"
+        } else {
+            sh "docker run -d -p 8090:8090 --name java-app dinahamza/depi-java:latest"
+        }
+    }
 }
