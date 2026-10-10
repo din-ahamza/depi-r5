@@ -1,3 +1,5 @@
+@Library('depi-lib') _
+
 pipeline {
     agent {
         label "agent-01"
@@ -14,29 +16,41 @@ pipeline {
     stages {
         stage("Build Java App") {
             steps {
-                sh "mvn package install -DskipTests=true"
+                script{
+                    def mvn = new edu.depi.maven()
+                    mvn.mavenCommand("package install -DskipTests=true")
+                }
             }
         }
         stage("Test Java App") {
             steps {
-                sh "mvn test"
+                script{
+                    def mvn = new edu.depi.maven()
+                    mvn.mavenCommand("test")
+                }
             }
         }
         stage("Build Docker Image") {
             steps {
-                sh "docker build -t dinahamza/depi-java:v${BUILD_NUMBER} ."
+                script{
+                    def dockerFun  = new edu.depi.docker()
+                    dockerFun.dockerBuild("dinahamza/depi-java", "v${BUILD_NUMBER}")
+                }
             }
         }
         stage("Login into DockerHub") {
             steps {
-                sh "docker login -u ${dockerUsername} -p ${dockerPass}"
+                script{
+                    def dockerFun  = new edu.depi.docker()
+                    dockerFun.dockerLogin("${dockerUsername}", "${dockerPass}")
+                }
             }
         }
-        stage("Push Docker Image") {
-            steps {
-                sh "docker push dinahamza/depi-java:v${BUILD_NUMBER}"
-            }
-        }
+        // stage("Push Docker Image") {
+        //     steps {
+        //         sh "docker push dinahamza/depi-java:v${BUILD_NUMBER}"
+        //     }
+        // }
         
     }
 }
